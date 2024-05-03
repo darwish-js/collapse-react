@@ -1,16 +1,15 @@
 .dar-collapse {
   border: 1px solid #ddd;
   border-radius: 8px;
+  font-size: 14px;
   .dar-collapse-header {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
-    padding: 12px 16px;
   }
   .dar-collapse-content {
     border-bottom: 1px solid #ddd;
-    padding: 12px 16px;
   }
   .dar-collapse-item:last-child {
     :not(.dar-collapse-header-active).dar-collapse-header{
