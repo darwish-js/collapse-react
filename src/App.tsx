@@ -1,4 +1,3 @@
-import "./App.css";
 import { Collapse, ItemsType } from "../lib/main";
 
 const items: ItemsType[] = [
@@ -42,8 +41,8 @@ const items: ItemsType[] = [
 function App() {
   return (
     <>
-      <div>
-        <Collapse items={items} />
+      <div className="mt-20 mx-40">
+        <Collapse defaultActiveKey={["1", "2", "3"]} items={items} />
       </div>
     </>
   );

@@ -1,0 +1,20 @@
+.dar-collapse {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  .dar-collapse-header {
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  .dar-collapse-content {
+    border-bottom: 1px solid #ddd;
+  }
+  .dar-collapse-item:last-child {
+    :not(.dar-collapse-header-active).dar-collapse-header{
+      border-bottom: unset;
+    }
+    .dar-collapse-content {
+      border-bottom: unset;
+    }
+  }
+
+}

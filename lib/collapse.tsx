@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./collapse.css";
 
 export interface ItemsType {
   key: string;
@@ -9,6 +10,7 @@ export interface CollapseProps {
   defaultActiveKey?: string[];
   activeKey?: string[];
   items?: ItemsType[];
+  accordion?: boolean;
   // disabled?: boolean;
   // className?: string;
   // style?: React.CSSProperties;
@@ -18,15 +20,39 @@ export interface CollapseProps {
   // onExpand?: () => void;
   // onCollapse?: () => void;
 }
+interface KeysType {
+  key: string;
+  isCollapsed: boolean;
+}
 export function Collapse(props: CollapseProps) {
-  const { defaultActiveKey, activeKey, items = [] } = props;
+  const { defaultActiveKey, activeKey, accordion, items = [] } = props;
+  const [keys, setKeys] = React.useState<KeysType[]>(() =>
+    items.map((item) => ({
+      key: item.key,
+      isCollapsed: defaultActiveKey?.includes(item.key) ?? false,
+    }))
+  );
+
+  const handleToggle = (key: string) => {
+    setKeys((prevKeys) =>
+      prevKeys.map((item) =>
+        item.key === key
+          ? { key: item.key, isCollapsed: !item.isCollapsed }
+          : item
+      )
+    );
+  };
+
   return (
-    <div>
-      {items.map((item) => (
+    <div className="dar-collapse">
+      {items.map((item, index) => (
         <Panel
+          order={item.key}
           key={item.key}
+          isCollapsed={keys[index].isCollapsed}
+          handleToggle={handleToggle}
           header={item.label}
-          forceRender={true}
+          // forceRender={true}
           children={item.content}
         />
       ))}
@@ -35,30 +61,30 @@ export function Collapse(props: CollapseProps) {
 }
 export interface PanelProps {
   // collapsible	是否可折叠或指定可折叠触发区域	header | icon | disabled	-	4.9.0 (icon: 4.24.0)
-  extra?: React.ReactNode;
-  forceRender?: boolean;
+  order: string;
+  isCollapsed: boolean;
+  handleToggle: (key: string) => void;
+  headerStyle?: React.CSSProperties;
+  boderStyle?: React.CSSProperties;
+  // extra?: React.ReactNode;
+  // forceRender?: boolean;
   header?: React.ReactNode;
-  key: string;
-  showArrow?: boolean;
+  // showArrow?: boolean;
 }
 export function Panel(props: React.PropsWithChildren<PanelProps>) {
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const { order, isCollapsed, header, handleToggle, children } = props;
   const [height, setHeight] = React.useState(0);
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
-      setHeight(contentRef.current.offsetHeight + 10);
+      setHeight(contentRef.current.offsetHeight);
     }
   }, [contentRef.current]);
 
-  const handleToggle = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   return (
     <div
-      className="ant-collapse-item"
+      className="dar-collapse-item"
       style={{
         height: isCollapsed ? `${height + 40}px` : "40px",
         overflow: "hidden",
@@ -66,18 +92,19 @@ export function Panel(props: React.PropsWithChildren<PanelProps>) {
       }}
     >
       <div
-        ref={contentRef}
-        onClick={handleToggle}
+        className={`dar-collapse-header ${
+          isCollapsed ? "dar-collapse-header-active" : ""
+        }`}
+        onClick={() => handleToggle(order)}
         style={{
-          cursor: "pointer",
           height: "40px",
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "rgba(0,0,0,0.02)",
         }}
       >
-        {props.header}
+        {header}
       </div>
-      <div>
-        <div className="ant-collapse-content">{props.children}</div>
+      <div ref={contentRef} className="dar-collapse-content">
+        <div>{children}</div>
       </div>
     </div>
   );
