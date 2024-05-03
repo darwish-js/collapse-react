@@ -2,12 +2,13 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
+import svgr from "vite-plugin-svgr";
 
 const isLib = process.env.LIB === "true";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dts({ include: ["lib"] })],
+  plugins: [react(), dts({ include: ["lib"] }), svgr()],
   build: isLib
     ? {
         copyPublicDir: false,
